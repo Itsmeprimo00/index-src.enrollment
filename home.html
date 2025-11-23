@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santa Rita College – Enrollment </title>
+<link rel="icon" type="image/png" href="logo.jpg" />
+<style>
+/* BODY */
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url('gg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: Arial, sans-serif;
+    color: white;
+    animation: fadeIn 1.5s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* HEADER */
+header {
+    background: rgba(0,0,0,0.6);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(6px);
+}
+.logo-box { display: flex; align-items: center; gap: 15px; }
+.logo-box img { width: 60px; height: 60px; border-radius: 8px; animation: zoomIn 1s ease; }
+@keyframes zoomIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* SETTINGS */
+.settings-container { position: relative; display: inline-block; }
+.settings-icon { width: 40px; height: 40px; cursor: pointer; border-radius: 50%; transition: .3s; }
+.settings-icon:hover { transform: scale(1.1); }
+
+.settings-dropdown {
+    position: absolute;
+    right: 0;
+    margin-top: 5px;
+    min-width: 160px;
+    background: rgba(0,0,0,0.85);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateY(-12px);
+    pointer-events: none;
+    transition: .35s ease;
+}
+.settings-dropdown.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.settings-dropdown a {
+    display: block;
+    padding: 12px;
+    color: white;
+    text-decoration: none;
+}
+.settings-dropdown a:hover { background: #4f46e5; }
+
+/* SUBTITLE */
+.subtitle {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+    text-shadow: 1px 1px 3px #000;
+}
+
+/* GRID */
+.wrapper {
+    max-width: 1200px;
+    margin: 40px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    padding: 20px;
+}
+
+/* CARD */
+.card {
+    background: rgba(30,64,175,0.9);
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    transition: .4s;
+}
+.card:hover { transform: scale(1.04); background: rgba(59,130,246,0.9); }
+
+/* REQUIREMENTS */
+.require-btn {
+    background: #2563eb;
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+.require-btn:hover { background: #1d4ed8; }
+
+.requirements {
+    max-height: 0;
+    overflow: hidden;
+    background: rgba(0,0,0,0.4);
+    padding: 0 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    opacity: 0;
+    transform: scaleY(0.95);
+    transition: .45s ease;
+}
+.requirements.show {
+    max-height: 250px;
+    opacity: 1;
+    transform: scaleY(1);
+}
+
+/* ENROLL BUTTON */
+.enroll-btn {
+    margin-top: 15px;
+    padding: 12px 22px;
+    background: linear-gradient(45deg,#9333ea,#6366f1);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: .3s;
+}
+.enroll-btn:hover { transform: scale(1.07); }
+
+/* FORM SMOOTH CLEAN REDESIGN */
+.enroll-form {
+    background: rgba(30,64,175,0.95);
+    border-radius: 15px;
+    margin-top: 15px;
+    overflow: hidden;
+    padding: 0 20px 20px;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-15px) scale(.97);
+    transition: max-height .55s ease, opacity .45s ease, transform .45s ease;
+}
+
+.enroll-form.show {
+    max-height: 1500px;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.enroll-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.enroll-form input,
+.enroll-form select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(79,142,247,0.9);
+    border: none;
+    color: white;
+}
+.enroll-form input:focus,
+.enroll-form select:focus {
+    outline: 2px solid #93c5fd;
+    background: rgba(59,130,246,0.9);
+    transform: scale(1.02);
+}
+
+/* SUBMIT BUTTON */
+.btn {
+    margin-top: 5px;
+    padding: 14px;
+    background: linear-gradient(135deg,#10b981,#3b82f6);
+    border: none;
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+}
+.btn:hover { transform: scale(1.05); }
+
+/* SUCCESS MESSAGE */
+.success-msg {
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(16,185,129,0.95);
+    border-radius: 12px;
+    display: none;
+    text-align: center;
+}
+.success-msg.show { display: block; }
+
+</style>
+
+</head>
+<body>
+
+<header>
+    <div class="logo-box">
+        <img src="logo.jpg">
+        <div class="title">Santa Rita College Enrollment Portal</div>
+    </div>
+
+    <div class="settings-container">
+        <img src="settings.png" class="settings-icon" onclick="toggleSettings()">
+        <div class="settings-dropdown" id="settingsDrop">
+            <a href="change-password.html">Change Password</a>
+            <a href="index.html">Logout</a>
+        </div>
+    </div>
+</header>
+
+<div class="subtitle">Your Future Starts Here – Choose Your Level</div>
+
+<div class="wrapper">
+
+<!-- ELEMENTARY -->
+<div class="card">
+    <h2>Elementary Enrollment</h2>
+    <p>Kinder to Grade 6</p>
+
+    <button class="require-btn" onclick="toggleReq('reqElem')">Admission Requirements</button>
+    <div id="reqElem" class="requirements">
+        <ul>
+            <li>Birth Certificate</li>
+            <li>Form 138</li>
+            <li>2×2 Picture</li>
+        </ul>
+    </div>
+
+    <button class="enroll-btn" onclick="toggleForm('elemForm')">Enroll Now</button>
+
+    <div id="elemForm" class="enroll-form">
+        <form onsubmit="submitEnrollment(event,'elem')">
+
+            <input name="fullName" placeholder="Full Name" required>
+            <input name="parentName" placeholder="Parent / Guardian" required>
+            <input name="email" type="email" placeholder="Email" required>
+            <input name="contact" placeholder="Contact" required>
+            <input name="address" placeholder="Address" required>
+
+            <select name="level" required>
+                <option disabled selected>Select Grade Level</option>
+                <option>Kinder</option>
+                <option>Grade 1</option>
+                <option>Grade 2</option>
+                <option>Grade 3</option>
+                <option>Grade 4</option>
+                <option>Grade 5</option>
+                <option>Grade 6</option>
+            </select>
+
+            <input type="file" name="photo" accept="image/*" required>
+
+            <button class="btn">Submit Enrollment</button>
+        </form>
+        <div class="success-msg">Successfully Enrolled!</div>
+    </div>
+</div>
+
+<!-- HIGH SCHOOL -->
+<div class="card">
+    <h2>High School Enrollment</h2>
+    <p>Junior & Senior High</p>
+
+    <button class="require-btn" onclick="toggleReq('reqHS')">Admission Requirements</button>
+    <div id="reqHS" class="requirements">
+        <ul>
+            <li>Birth Certificate</li>
+            <li>Form 138</li>
+            <li>Good Moral</li>
+        </ul>
+    </div>
+
+    <button class="enroll-btn" onclick="toggleForm('hsForm')">Enroll Now</button>
+
+    <div id="hsForm" class="enroll-form">
+        <form onsubmit="submitEnrollment(event,'hs')">
+
+            <input name="fullName" placeholder="Full Name" required>
+            <input name="parentName" placeholder="Parent / Guardian" required>
+            <input name="email" type="email" placeholder="Email" required>
+            <input name="contact" placeholder="Contact" required>
+            <input name="address" placeholder="Address" required>
+
+            <select name="level" id="hsLevel" onchange="toggleStrand()" required>
+                <option disabled selected>Select Level</option>
+                <option value="junior">Junior High</option>
+                <option value="senior">Senior High</option>
+            </select>
+
+            <select name="strand" id="strandBox" style="display:none;">
+                <option disabled selected>Select Strand</option>
+                <option>STEM</option>
+                <option>ABM</option>
+                <option>HUMSS</option>
+                <option>GAS</option>
+            </select>
+
+            <input type="file" name="photo" accept="image/*" required>
+
+            <button class="btn">Submit Enrollment</button>
+        </form>
+        <div class="success-msg">Successfully Enrolled!</div>
+    </div>
+</div>
+
+<!-- COLLEGE -->
+<div class="card">
+    <h2>College Enrollment</h2>
+    <p>Degree Programs</p>
+
+    <button class="require-btn" onclick="toggleReq('reqCOL')">Admission Requirements</button>
+    <div id="reqCOL" class="requirements">
+        <ul>
+            <li>Form 137 / TOR</li>
+            <li>Birth Certificate</li>
+            <li>2×2 Picture</li>
+        </ul>
+    </div>
+
+    <button class="enroll-btn" onclick="toggleForm('colForm')">Enroll Now</button>
+
+    <div id="colForm" class="enroll-form">
+        <form onsubmit="submitEnrollment(event,'college')">
+
+            <input name="fullName" placeholder="Full Name" required>
+            <input name="studentId" placeholder="Student ID (If Transferee)">
+            <input name="email" type="email" placeholder="Email" required>
+            <input name="contact" placeholder="Contact" required>
+            <input name="address" placeholder="Address" required>
+
+            <select name="course" required>
+                <option disabled selected>Select Course</option>
+                <option>BS Information System</option>
+                <option>BS Business Administration</option>
+                <option>BS Education</option>
+            </select>
+
+            <input type="file" name="photo" accept="image/*" required>
+
+            <button class="btn">Submit Enrollment</button>
+        </form>
+        <div class="success-msg">Successfully Enrolled!</div>
+    </div>
+</div>
+
+</div>
+
+<script>
+// SETTINGS DROPDOWN
+function toggleSettings(){
+    document.getElementById("settingsDrop").classList.toggle("show");
+}
+
+// REQUIREMENTS
+function toggleReq(id){
+    document.getElementById(id).classList.toggle("show");
+}
+
+// CLOSE ALL FORMS
+function closeAllForms() {
+    document.querySelectorAll(".enroll-form").forEach(f => {
+        f.classList.remove("show");
+    });
+}
+
+// OPEN ONE FORM ONLY
+function toggleForm(id){
+    let form = document.getElementById(id);
+
+    if (!form.classList.contains("show")) {
+        closeAllForms();
+    }
+
+    form.classList.toggle("show");
+}
+
+// SENIOR HIGH STRAND
+function toggleStrand(){
+    const level = document.getElementById("hsLevel").value;
+    document.getElementById("strandBox").style.display =
+        level === "senior" ? "block" : "none";
+}
+
+// SUBMIT ENROLLMENT
+function submitEnrollment(event, type){
+    event.preventDefault();
+
+    let form = event.target;
+    let box = form.parentElement;
+    let success = box.querySelector(".success-msg");
+
+    let data = {};
+    let inputs = form.querySelectorAll("input, select");
+
+    let photo = form.querySelector("[name='photo']").files[0];
+    if(!photo){
+        alert("Please upload your 2×2 picture.");
+        return;
+    }
+
+    inputs.forEach(x => { if(x.name) data[x.name] = x.value; });
+
+    let reader = new FileReader();
+    reader.onload = () => {
+
+        data.photo = reader.result;
+        data.verified = false;
+
+        let list = JSON.parse(localStorage.getItem("enrolledStudents")) || [];
+        list.push(data);
+        localStorage.setItem("enrolledStudents", JSON.stringify(list));
+
+        success.classList.add("show");
+
+        setTimeout(() => {
+            success.classList.remove("show");
+            form.reset();
+            box.classList.remove("show");
+        }, 1800);
+    };
+
+    reader.readAsDataURL(photo);
+}
+</script>
+
+</body>
+</html>

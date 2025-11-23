@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Santa Rita College Online Enrollment</title>
+  <link rel="icon" type="image/png" href="logo.jpg" />
+
+  <style>
+    /* Reset & basic styling */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('gg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Animation */
+    @keyframes fadeIn { 0% {opacity: 0; transform: translateY(-20px);} 100% {opacity: 1; transform: translateY(0);} }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 40px 30px;
+      border-radius: 15px;
+      width: 360px;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      animation: fadeIn 0.8s ease-in-out;
+      transition: transform 0.3s ease;
+    }
+
+    .container:hover { transform: translateY(-5px); }
+
+    h2 { font-size: 24px; font-weight: 700; margin-bottom: 25px; color: #f3f3f3; text-shadow: 1px 1px 5px rgba(0,0,0,0.4); }
+
+    input {
+      width: 100%; padding: 12px 15px; margin: 10px 0; border-radius: 10px; border: none; outline: none;
+      font-size: 15px; background: rgba(255,255,255,0.15); color: #fff; backdrop-filter: blur(5px); transition: 0.3s;
+    }
+
+    input::placeholder { color: #ddd; }
+    input:focus { background: rgba(255,255,255,0.25); box-shadow: 0 0 5px #944369; }
+
+    button {
+      width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 10px;
+      cursor: pointer; font-size: 16px; font-weight: 600; color: #fff;
+      background: linear-gradient(45deg, #944369, #b464a6); transition: 0.3s;
+    }
+
+    button:hover { background: linear-gradient(45deg, #b464a6, #944369); transform: scale(1.05); }
+
+    .links { display: flex; justify-content: space-between; margin-top: 15px; }
+
+    .link {
+      cursor: pointer; text-decoration: underline; font-size: 14px; color: #f1f1f1; transition: 0.2s;
+    }
+
+    .link:hover { color: #b464a6; }
+
+    /* Smooth show/hide animations */
+    #registerContainer { display: none; opacity: 0; transition: opacity 0.5s ease; }
+    #registerContainer.show { display: block; opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Login Section -->
+  <div class="container" id="loginContainer">
+    <h2>Santa Rita College Online Enrollment</h2>
+    <input type="text" id="loginUsername" placeholder="Student ID or Username" />
+    <input type="password" id="loginPassword" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <div class="links">
+      <span class="link" onclick="showRegister()">Register</span>
+      <span class="link" onclick="forgotPassword()">Forgot Password?</span>
+    </div>
+  </div>
+
+  <!-- Register Section -->
+  <div class="container" id="registerContainer">
+    <h2>Santa Rita College Online Enrollment</h2>
+    <input type="text" id="regUsername" placeholder="Create Username or Student ID" />
+    <input type="email" id="regEmail" placeholder="Enter Email Address" />
+    <input type="password" id="regPassword" placeholder="Create Password" />
+    <button onclick="register()">Register</button>
+    <span class="link" onclick="showLogin()">Back to Login</span>
+  </div>
+
+  <script>
+    function showRegister() {
+      document.getElementById("loginContainer").style.display = "none";
+      document.getElementById("registerContainer").classList.add("show");
+    }
+
+    function showLogin() {
+      document.getElementById("registerContainer").classList.remove("show");
+      document.getElementById("loginContainer").style.display = "block";
+    }
+
+    function register() {
+      let username = document.getElementById("regUsername").value.trim();
+      let email = document.getElementById("regEmail").value.trim();
+      let password = document.getElementById("regPassword").value.trim();
+
+      if (!username || !email || !password) {
+        alert("Please fill in all fields!");
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem("users")) || {};
+
+      for (let key in users) {
+        if (users[key].email === email) {
+          alert("Email already registered!");
+          return;
+        }
+        if (key === username) {
+          alert("Username already exists!");
+          return;
+        }
+      }
+
+      users[username] = { email: email, password: password };
+      localStorage.setItem("users", JSON.stringify(users));
+
+      alert("Registration successful! You can now log in.");
+      
+      // Automatically switch back to login form
+      showLogin();
+    }
+
+    function login() {
+      let username = document.getElementById("loginUsername").value.trim();
+      let password = document.getElementById("loginPassword").value.trim();
+      let users = JSON.parse(localStorage.getItem("users")) || {};
+
+      if (!users[username]) alert("User not found!");
+      else if (users[username].password !== password) alert("Incorrect password!");
+      else window.location.href = "home.html"; // Redirect after login
+    }
+
+    function forgotPassword() {
+      const email = prompt("Enter your registered email address:");
+      if (!email) return;
+
+      let users = JSON.parse(localStorage.getItem("users")) || {};
+      let foundUser = null;
+
+      for (let username in users) {
+        if (users[username].email === email) { foundUser = username; break; }
+      }
+
+      if (!foundUser) { alert("Email not found!"); return; }
+
+      const code = Math.floor(100000 + Math.random() * 900000);
+      localStorage.setItem("forgotCode", code);
+      localStorage.setItem("forgotEmail", email);
+
+      alert(`Verification code sent to ${email}.\n(For demo, your code is: ${code})`);
+
+      const userCode = prompt("Enter the verification code:");
+      if (userCode == localStorage.getItem("forgotCode")) {
+        alert("Verification successful! Your password is: " + users[foundUser].password);
+        localStorage.removeItem("forgotCode");
+        localStorage.removeItem("forgotEmail");
+      } else {
+        alert("Incorrect code!");
+      }
+    }
+  </script>
+
+</body>
+</html>
